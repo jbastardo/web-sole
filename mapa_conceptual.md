@@ -14,9 +14,11 @@ A diferencia de un servicio informal de mano de obra o maestros independientes, 
 
 ```mermaid
 graph TD
-    Client["Visitante / Cliente (Mobile & Desktop)"] --> Cloudflare["Cloudflare / Red / SSL"]
-    Cloudflare --> Coolify["Coolify PaaS (Docker Host)"]
-    Coolify --> Container["Contenedor Nginx Alpine (Puerto 80)"]
+    Client["Visitante / Cliente (Mobile & Desktop)"] --> Cloudflare["Cloudflare Zero Trust / Red Edge"]
+    Cloudflare --> CFTunnel["Cloudflare Tunnel (cloudflared)"]
+    CFTunnel --> HostPort["Puerto Host 8013 (localhost:8013)"]
+    HostPort --> Coolify["Coolify PaaS (Docker Host)"]
+    Coolify --> Container["Contenedor Nginx Alpine (8013:80)"]
     Container --> StaticSite["Sitio Web Estático Optimizado"]
     StaticSite --> Home["Home (index.html)"]
     StaticSite --> Services["Servicios Específicos (/cocinas, /banos, /terrazas, etc.)"]
@@ -28,9 +30,9 @@ graph TD
 
 - **Stack Tecnológico:**
   - **Estructura:** HTML5 semántico nativo (sin frameworks pesados para máxima velocidad y Lighthouse 100).
-  - **Estilos:** CSS3 puro con variables corporativas (`--color-primary`, `--color-secondary`, etc.) y responsive design Mobile First + widescreen horizontal layout.
-  - **Interactividad:** JavaScript modular (`js/main.js`) con variables centralizadas (`SOLE_CONFIG`), control de FAQ acordeón, menú responsive y ganchos para Google Analytics 4, GTM y Meta Pixel.
-  - **Servidor y Producción:** `Dockerfile` con `nginx:alpine` y `nginx.conf` optimizado con compresión Gzip y headers de caché para assets.
+  - **Estilos:** CSS3 puro con variables corporativas (`--color-primary`, `--color-secondary`, etc.), versionado de caché para assets y responsive design Mobile First + widescreen layout.
+  - **Interactividad:** JavaScript modular (`js/main.js`) con variables centralizadas (`SOLE_CONFIG`), menú móvil hamburguesa con cierre por clic exterior, control de FAQ acordeón y ganchos de analítica.
+  - **Servidor y Producción:** `Dockerfile` con `nginx:alpine` y `nginx.conf` optimizado con compresión Gzip, expuesto en el puerto host `8013:80` e integrado a Cloudflare Tunnel en `https://sole.tutecnotienda.site`.
   - **SEO Técnico:** `sitemap.xml`, `robots.txt`, Schema.org JSON-LD (`HomeAndConstructionBusiness`, `Service`, `Article`, `AboutPage`, `ContactPage`), canonical tags y metadatos Open Graph.
 
 ---
