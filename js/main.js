@@ -91,6 +91,15 @@ function initMobileMenu() {
       toggleBtn.innerHTML = "☰";
     });
   });
+
+  // Cerrar al hacer clic fuera del menú
+  document.addEventListener("click", (e) => {
+    if (drawer.classList.contains("open") && !drawer.contains(e.target) && !toggleBtn.contains(e.target)) {
+      drawer.classList.remove("open");
+      toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.innerHTML = "☰";
+    }
+  });
 }
 
 // ==========================================================================
